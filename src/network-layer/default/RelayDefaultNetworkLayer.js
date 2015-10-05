@@ -17,10 +17,6 @@ var Promise = require('Promise');
 import type RelayMutationRequest from 'RelayMutationRequest';
 import type RelayQueryRequest from 'RelayQueryRequest';
 
-var fetch = require('fetch');
-var fetchWithRetries = require('fetchWithRetries');
-import type {InitWithRetries} from 'fetchWithRetries';
-
 type GraphQLError = {
   message: string;
   locations: Array<GraphQLErrorLocation>;
@@ -34,7 +30,7 @@ class RelayDefaultNetworkLayer {
   _uri: string;
   _init: $FlowIssue; // InitWithRetries
 
-  constructor(uri: string, init?: ?InitWithRetries) {
+  constructor(uri: string, init?) {
     this._uri = uri;
     this._init = {...init};
 
@@ -142,7 +138,7 @@ class RelayDefaultNetworkLayer {
    * Sends a POST request and retries if the request fails or times out.
    */
   _sendQuery(request: RelayQueryRequest): Promise {
-    return fetchWithRetries(this._uri, {
+    return fetch(this._uri, {
       ...this._init,
       body: JSON.stringify({
         query: request.getQueryString(),
